@@ -87,7 +87,8 @@ class Kedi{
 
 }
 
-const player = new Player()
+
+let player = new Player()
 
 function createImage(imageSrc){
 	const image = new Image();
@@ -95,23 +96,25 @@ function createImage(imageSrc){
 	return image;
 }
 
-const PlatformMiddle = createImage('https://phocopol.sirv.com/ara-zemin.png');
+let PlatformMiddle = createImage('https://phocopol.sirv.com/ara-zemin.png');
 
-const PlatformRight = createImage('https://phocopol.sirv.com/sag-uc-zemin.png');
+let PlatformRight = createImage('https://phocopol.sirv.com/sag-uc-zemin.png');
 
-const PlatformLeft = createImage('https://phocopol.sirv.com/sol-uc-zemin.png');
+let PlatformLeft = createImage('https://phocopol.sirv.com/sol-uc-zemin.png');
 
-const PlatformFloating =  createImage('https://phocopol.sirv.com/pixil-frame-0%20(11).png');
+let PlatformFloating =  createImage('https://phocopol.sirv.com/pixil-frame-0%20(11).png');
 
-const Flag = createImage('https://phocopol.sirv.com/flag.png');
+let Flag = createImage('https://phocopol.sirv.com/flag.png');
 
-const YouWinCat =  createImage('https://phocopol.sirv.com/pixil-frame-0%20(17).png');
+let Mountains = createImage('https://phocopol.sirv.com/aaatrees.png');
 
-const Mountains = createImage('https://phocopol.sirv.com/aaatrees.png');
+let Background = createImage('https://phocopol.sirv.com/sad.png');
 
-const Background = createImage('https://phocopol.sirv.com/sad.png');
+let YouWinCat =  createImage('https://phocopol.sirv.com/pixil-frame-0%20(17).png');
 
-const platforms = [
+let YouLoseCat =  createImage('https://phocopol.sirv.com/pixil-frame-0%20(20).png');
+
+let platforms = [
 	new Platform({x:0, y:470, image: PlatformMiddle}), 
 	new Platform({x:PlatformMiddle.width, y:470, image: PlatformMiddle}), 
 	new Platform({x: -12, y: 470, image: PlatformRight}),
@@ -125,27 +128,93 @@ const platforms = [
 	new Platform({x: 1350+PlatformMiddle.width, y: 470, image: PlatformLeft}),
 ]
 
-const biblos = [
+let biblos = [
 	new Biblo({x:0, y:0, image: Background}),
 	new Biblo({x:0, y:0, image:Mountains}),
 	new Biblo({x:1500, y:350, image:Flag}),
 ]
 
-const kedis = [
+let kedis = [
 	new Kedi({x:450, y:100, image: YouWinCat}),
+	new Kedi({x:450, y:100, image: YouLoseCat})
 ]
 
 
-const keys = {
+let keys = {
 	right: {
 		pressed: false
 	},
 	left: {
 		pressed: false
+	},
+	"space": {
+		pressed: false
 	}
 }
 
 let scrollOffSet = 0
+
+function init(){
+	player = new Player()
+
+	PlatformMiddle = createImage('https://phocopol.sirv.com/ara-zemin.png');
+
+	PlatformRight = createImage('https://phocopol.sirv.com/sag-uc-zemin.png');
+
+	PlatformLeft = createImage('https://phocopol.sirv.com/sol-uc-zemin.png');
+
+	PlatformFloating =  createImage('https://phocopol.sirv.com/pixil-frame-0%20(11).png');
+
+	Flag = createImage('https://phocopol.sirv.com/flag.png');
+
+	Mountains = createImage('https://phocopol.sirv.com/aaatrees.png');
+
+	Background = createImage('https://phocopol.sirv.com/sad.png');
+
+	YouWinCat =  createImage('https://phocopol.sirv.com/pixil-frame-0%20(17).png');
+
+	YouLoseCat =  createImage('https://phocopol.sirv.com/pixil-frame-0%20(20).png');
+
+	platforms = [
+		new Platform({x:0, y:470, image: PlatformMiddle}), 
+		new Platform({x:PlatformMiddle.width, y:470, image: PlatformMiddle}), 
+		new Platform({x: -12, y: 470, image: PlatformRight}),
+		new Platform({x: 2*PlatformMiddle.width, y: 470, image: PlatformLeft}),
+		
+		new Platform({x: 200, y: 300, image: PlatformFloating}),
+		new Platform({x: 500, y: 150, image: PlatformFloating}),
+
+		new Platform({x:1350, y:470, image: PlatformMiddle}), 
+		new Platform({x: 1350-12, y: 470, image: PlatformRight}),
+		new Platform({x: 1350+PlatformMiddle.width, y: 470, image: PlatformLeft}),
+	]
+
+	biblos = [
+		new Biblo({x:0, y:0, image: Background}),
+		new Biblo({x:0, y:0, image:Mountains}),
+		new Biblo({x:1500, y:350, image:Flag}),
+	]
+
+	kedis = [
+		new Kedi({x:450, y:100, image: YouWinCat}),
+		new Kedi({x:450, y:100, image: YouLoseCat})
+	]
+
+
+	keys = {
+		right: {
+			pressed: false
+		},
+		left: {
+			pressed: false
+		},
+		"space": {
+			pressed: false
+		}
+	}
+
+	scrollOffSet = 0	
+}
 
 function animate(){
 	requestAnimationFrame(animate)
@@ -222,15 +291,28 @@ function animate(){
 	})
 
 	if (scrollOffSet>1100) {
-		console.log('you win')
+		//console.log('you win')
 		
 		kedis.forEach(Kedi => {
+			if(Kedi.image==YouWinCat)
 			Kedi.draw()
 		})
 	}
 
 	if (player.position.y>canvas.height){
-		console.log('you lose')
+		//console.log('you lose')
+		
+		kedis.forEach(Kedi => {
+			if(Kedi.image==YouLoseCat)
+			Kedi.draw()
+		})
+
+		if(keys["space"].pressed){
+			init();
+
+		}
+
+		
 	}
 	
 }
@@ -256,6 +338,9 @@ window.addEventListener('keydown', ({keyCode}) => {
 		//console.log('up')
 		player.velocity.y -= 20
 		break
+	case 32:
+		keys["space"].pressed = true
+		break
 	}
 
 	//console.log(keys.right.pressed)
@@ -279,6 +364,9 @@ window.addEventListener('keyup', ({keyCode}) => {
 	case 87:
 		//console.log('up')
 		player.velocity.y =0
+		break
+	case 32:
+		keys["space"].pressed = false
 		break
 	}
 
