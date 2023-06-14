@@ -30,7 +30,7 @@ class Player {
 
 		this.position.x += this.velocity.x
 		this.position.y += this.velocity.y
-		
+		576
 		if (this.position.y + this.height + this.velocity.y <= canvas.height)
 		this.velocity.y += gravity
 		//else this.velocity.y = 0
@@ -106,9 +106,9 @@ let PlatformFloating =  createImage('https://phocopol.sirv.com/pixil-frame-0%20(
 
 let Flag = createImage('https://phocopol.sirv.com/flag.png');
 
-let Mountains = createImage('https://phocopol.sirv.com/aaatrees.png');
+let Mountains = createImage('https://phocopol.sirv.com/agac2.png');
 
-let Background = createImage('https://phocopol.sirv.com/sad.png');
+let Background = createImage('https://phocopol.sirv.com/g%C3%B6ky%C3%BCz%C3%BCbulut.png');
 
 let YouWinCat =  createImage('https://phocopol.sirv.com/pixil-frame-0%20(17).png');
 
@@ -167,14 +167,13 @@ function init(){
 
 	Flag = createImage('https://phocopol.sirv.com/flag.png');
 
-	Mountains = createImage('https://phocopol.sirv.com/aaatrees.png');
+	Mountains = createImage('https://phocopol.sirv.com/agac2.png');
 
-	Background = createImage('https://phocopol.sirv.com/sad.png');
+	Background = createImage('https://phocopol.sirv.com/g%C3%B6ky%C3%BCz%C3%BCbulut.png');
 
 	YouWinCat =  createImage('https://phocopol.sirv.com/pixil-frame-0%20(17).png');
 
 	YouLoseCat =  createImage('https://phocopol.sirv.com/pixil-frame-0%20(20).png');
-
 	platforms = [
 		new Platform({x:0, y:470, image: PlatformMiddle}), 
 		new Platform({x:PlatformMiddle.width, y:470, image: PlatformMiddle}), 
@@ -191,7 +190,7 @@ function init(){
 
 	biblos = [
 		new Biblo({x:0, y:0, image: Background}),
-		new Biblo({x:0, y:0, image:Mountains}),
+		new Biblo({x:0, y:0, image: Mountains}),
 		new Biblo({x:1500, y:350, image:Flag}),
 	]
 
@@ -301,10 +300,13 @@ function animate(){
 
 	if (player.position.y>canvas.height){
 		//console.log('you lose')
-		
 		kedis.forEach(Kedi => {
 			if(Kedi.image==YouLoseCat)
 			Kedi.draw()
+			
+
+
+
 		})
 
 		if(keys["space"].pressed){
@@ -319,29 +321,44 @@ function animate(){
 
 animate()
 
+var isJumping = false;
+var isGrounded = true;
+var doubleJump = true;
+var maxJumps = 2;
+var jumpsLeft= maxJumps ;
+
 window.addEventListener('keydown', ({keyCode}) => {
 	//console.log(keyCode)
 	switch(keyCode) {
 	case 65:
 		//console.log('left')
+		if (player.position.y<=canvas.height)
 		keys.left.pressed = true
-		break
-	case 83:
-		//console.log('down')
-		player.velocity.y += 20
 		break
 	case 68:
 		//console.log('right')
+		if (player.position.y<=canvas.height)
 		keys.right.pressed = true
 		break
 	case 87:
 		//console.log('up')
-		player.velocity.y -= 20
+		if(player.velocity.y==0){
+			jumpsLeft = maxJumps
+		}
+		if (player.position.y <= canvas.height) {
+			if (!isJumping && jumpsLeft>0) {
+				player.velocity.y -= 20;
+				isJumping = true; // Yükselme durumunu güncelliyoruz
+				jumpsLeft--
+			}
+		}
+		
 		break
 	case 32:
 		keys["space"].pressed = true
 		break
 	}
+	console.log(player.velocity.y)
 
 	//console.log(keys.right.pressed)
 })
@@ -353,25 +370,27 @@ window.addEventListener('keyup', ({keyCode}) => {
 		//console.log('left')
 		keys.left.pressed = false
 		break
-	case 83:
-		//console.log('down')
-		player.velocity.y += 20
-		break
 	case 68:
 		//console.log('right')
 		keys.right.pressed = false
 		break
 	case 87:
 		//console.log('up')
-		player.velocity.y =0
+		isJumping = false
+		doubleJump=false
+		
 		break
 	case 32:
 		keys["space"].pressed = false
 		break
 	}
+	console.log(player.velocity.y)
 
 	//console.log(keys.right.pressed)
 })
+
+console.log(player.velocity.y)
+
 
 
 
